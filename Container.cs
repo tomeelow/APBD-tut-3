@@ -41,6 +41,7 @@ public abstract class Container
             throw new EmptyCargoException("The mass of the cargo is too small");
         }
         
+        //comment
         CargoMass += PayloadMass;
         Console.WriteLine($"Loaded {PayloadMass} kg of {PayloadName} in container {SerialNumber}");
         
