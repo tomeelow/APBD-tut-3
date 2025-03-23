@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("container_manager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41f417592bc2eda48b03da53bb388dc08dbf4320")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1a349b2be91e01a0d4f19cb7f4ff535d012d37e")]
 [assembly: System.Reflection.AssemblyProductAttribute("container_manager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("container_manager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
