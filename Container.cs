@@ -1,48 +1,54 @@
-namespace container_manager;
-
-public abstract class Container
+namespace container_manager
 {
-    private int CargoMass { get; set; }
-    private int Height { get; set; }
-    private int TareWeight { get; set; }
-    private int Depth { get; set; }
-    private string SerialNumber { get; set; }
-    private int MaxPayload { get; set; }
-    
-    private int ContainerIndex { get; set; }
-
-    protected Container(String serialNumber, int Height, int TareWeight, int Depth, int MaxPayload)
+    public abstract class Container
     {
-        SerialNumber = serialNumber;
-        Height = this.Height;
-        TareWeight = this.TareWeight;
-        Depth = this.Depth;
-        MaxPayload = this.MaxPayload;
+        public int CargoMass { get; set; }
+        public int Height { get; set; }
+        public int TareWeight { get; set; }
+        public int Depth { get; set; }
+        public string SerialNumber { get; set; }
+        public int MaxPayload { get; set; }
         
-        ContainerIndex += 1;
-        SerialNumber += ContainerIndex.ToString();
-    }
+        protected string? LoadedPayload { get; set; } = null;
+        protected bool? IsHazardousCargo { get; set; } = null;
 
-    public void UnloadContainer()
-    {
-        CargoMass = 0;
-    }
-
-    public virtual void LoadContainer(char PayloadType, string PayloadName, int PayloadMass)
-    {
-
-        if (CargoMass + PayloadMass > MaxPayload)
+        // counters for unique serial numbers per container type
+        private static Dictionary<string, int> containerCounters = new Dictionary<string, int>()
         {
-            throw new OverfillException("Container is full");
-        }
+            {"L", 0}, {"G", 0}, {"C", 0}
+        };
 
-        if (CargoMass <= 0)
+        protected Container(string typeCode, int height, int tareWeight, int depth, int maxPayload)
         {
-            throw new EmptyCargoException("The mass of the cargo is too small");
+            Height = height;
+            TareWeight = tareWeight;
+            Depth = depth;
+            MaxPayload = maxPayload;
+            CargoMass = 0;
+
+            if (!containerCounters.ContainsKey(typeCode))
+                containerCounters[typeCode] = 0;
+
+            containerCounters[typeCode]++;
+            SerialNumber = $"KON-{typeCode}-{containerCounters[typeCode]}";
         }
         
-        CargoMass += PayloadMass;
-        Console.WriteLine($"Loaded {PayloadMass} kg of {PayloadName} in container {SerialNumber}");
+        public virtual void UnloadContainer()
+        {
+            CargoMass = 0;
+            LoadedPayload = null;
+            Console.WriteLine($"Container {SerialNumber} cargo unloaded.");
+        }
         
+        public abstract void LoadContainer(char payloadType, string payloadName, int payloadMass, bool hazardous = false);
+        
+        public virtual void PrintInfo()
+        {
+            var payloadDisplay = LoadedPayload ?? "(none)";
+            var hazardDisplay = IsHazardousCargo.HasValue && IsHazardousCargo.Value ? "Hazardous" : "Non-hazardous";
+
+            Console.WriteLine(
+                $"Container Serial: {SerialNumber}, CargoMass: {CargoMass} kg, MaxPayload: {MaxPayload} kg, Payload: {payloadDisplay}, {hazardDisplay}");
+        }
     }
 }
